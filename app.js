@@ -3,8 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const database = require( './lib/ronin-database' )
 
 var app = express();
 
@@ -14,7 +13,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+const routes = require( './routes' )
+
+app.use('/', routes );
+
+database
+  .connect( 'mongodb+srv://zion-admin:asdf234rassbsdb0924lkmfsb98yj;mqwef@cluster0-itpgx.mongodb.net/test?retryWrites=true&w=majority' )
+  .then( () => {
+    console.log( 'connected to database' )
+  })
+  .catch( error => {
+    console.error( error )
+  })
+
+
 
 module.exports = app;
